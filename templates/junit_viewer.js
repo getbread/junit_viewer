@@ -30,6 +30,7 @@ function toggleContraction(element) {
     } catch (err) {
       /* gotta catch em all, lmaooooo */
     }
+    return;
   }
 
   replaceClass(suiteButton, 'round', 'flat');
