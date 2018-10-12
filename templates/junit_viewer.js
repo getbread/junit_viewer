@@ -24,7 +24,7 @@ function toggleContraction(element) {
     replaceClass(suiteButton, 'flat', 'round');
     addClass(suiteContent, 'contracted');
     try {
-      frame = element.parentElement.children[1].appendChild(frame);
+      frame = element.querySelector('iframe');
       frame.remove();
       element.classList.remove('framed');
     } catch (err) {
@@ -35,13 +35,13 @@ function toggleContraction(element) {
 
   replaceClass(suiteButton, 'round', 'flat');
   removeClass(suiteContent, 'contracted');
-  if (~element.className.indexOf('failure') && !~element.className.indexOf('framed')) {
+  if (!~element.className.indexOf('framed') && ~element.children[0].className.indexOf('failure')) {
     try {
       let frame = document.createElement('iframe');
       let url = suiteButton.textContent.split(' at url ')[1].textContent.split(' at url ')[1];
       frame.src = url;
 
-      element.parentElement.children[1].appendChild(frame);
+      element.children[1].appendChild(frame);
       element.className += ' framed';
     } catch (err) {
       console.log('failed to setup iframe because: ' + err);
