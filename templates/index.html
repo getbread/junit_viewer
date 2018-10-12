@@ -12,13 +12,50 @@
     <div class="junit_info">{{{junit_info.suites}}}</div>
     <div class="junit_info">{{{junit_info.tests}}}</div>
     <button id="count-results">count results</button>
-    <button id="show-successes">show passing tests (currently hidden)</button>
+    <button id="show-successes">show passing tests and flakes (currently hidden)</button>
+    <button id="consolidate-flakes">consolidate flake attempts</button>
     <div>
         <div id="options_container" class="container__options column one">{{{options}}}</div>
         <div id="suites_container" class="u-pull-right columns eleven container__suites">{{{suites}}}</div>
     </div>
     <script type="text/javascript">{{{javascript}}}</script>
     <script type="text/javascript">
+			document.getElementById('consolidate-flakes').onclick = function () {
+				document.querySelectorAll('.test').reduce((v, i, a) => {
+					if(!a.length) {
+						a.push(v);
+					} else {
+						let currentTest = v.querySelectorAll('button span')[0].textContent;
+						if (a[0].querySelectorAll('button span')[0].textContent === currentTest) {
+							if(v.querySelector('.test--passed').length) {
+								// priors are flakes
+								a.forEach(elem => {
+									let testButton = elem.querySelector('button');
+									testButton.classList.remove('test--failure');
+									testButton.classList.add('test--flake');
+								});
+								a = []; //we know test is complete. Reset to base case.
+							} else {
+								// were all failures, continue
+								a.push(v);
+							}
+						} else {
+							//last test concluded. Assess failure and continue
+							if(!a[0].querySelector('.test--passed').length) {
+								a.pop();
+								a.forEach(elem => {
+									let testButton = elem.querySelector('button');
+									testButton.classList.remove('test--failure');
+									testButton.classList.add('test--flailure');
+								});
+								a = []; //clear the old complete test. Will add this unknown test in either case.
+							}
+							a.push(v);
+						}
+					}
+					return a;
+				}, [])
+			}
 			document.getElementById('show-successes').onclick = function () {
 				document.querySelectorAll('.test button.hidden').forEach(elem => {
 					elem.classList.remove('hidden');
