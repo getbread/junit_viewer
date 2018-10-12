@@ -38,7 +38,7 @@ function toggleContraction(element) {
   if (!~element.className.indexOf('framed') && ~element.children[0].className.indexOf('failure')) {
     try {
       let frame = document.createElement('iframe');
-      let url = suiteButton.textContent.split(' at url ')[1].textContent.split(' at url ')[1];
+      let url = suiteButton.textContent.split(' at url ')[1];
       frame.src = url;
 
       element.children[1].appendChild(frame);
