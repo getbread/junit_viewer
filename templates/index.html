@@ -21,13 +21,13 @@
     <script type="text/javascript">{{{javascript}}}</script>
     <script type="text/javascript">
 			window.consolidate = function () {
-				document.querySelectorAll('.test').reduce((v, i, a) => {
+				Array.prototype.reduce.call(document.querySelectorAll('.test'), (a, v, i) => {
 					if(!a.length) {
 						a.push(v);
 					} else {
 						let currentTest = v.querySelectorAll('button span')[0].textContent;
 						if (a[0].querySelectorAll('button span')[0].textContent === currentTest) {
-							if(v.querySelector('.test--passed').length) {
+							if(v.querySelector('.test--passed')) {
 								// priors are flakes
 								a.forEach(elem => {
 									let testButton = elem.querySelector('button');
@@ -41,15 +41,15 @@
 							}
 						} else {
 							//last test concluded. Assess failure and continue
-							if(!a[0].querySelector('.test--passed').length) {
+							if(!a[0].querySelector('.test--passed')) {
 								a.pop();
 								a.forEach(elem => {
 									let testButton = elem.querySelector('button');
 									testButton.classList.remove('test--failure');
 									testButton.classList.add('test--flailure');
 								});
-								a = []; //clear the old complete test. Will add this unknown test in either case.
 							}
+							a = [];
 							a.push(v);
 						}
 					}
