@@ -12,12 +12,18 @@
     <div class="junit_info">{{{junit_info.suites}}}</div>
     <div class="junit_info">{{{junit_info.tests}}}</div>
     <button id="count-results">count results</button>
+    <button id="show-successes">show passing tests (currently hidden)</button>
     <div>
         <div id="options_container" class="container__options column one">{{{options}}}</div>
         <div id="suites_container" class="u-pull-right columns eleven container__suites">{{{suites}}}</div>
     </div>
     <script type="text/javascript">{{{javascript}}}</script>
     <script type="text/javascript">
+			document.getElementById('show-successes').onclick = function () {
+				document.querySelectorAll('.test button.hidden').forEach(elem => {
+					elem.classList.remove('hidden');
+				});
+			};
       document.getElementById("count-results").onclick = function () {
 javascript:(function(){var testSummary=function(){var tests = document.querySelectorAll(".test"); var failedTests = {}; var passedTests = {}; var testSummary = {}; tests.forEach(function(test) {var btn = test.querySelector("button.test--passed span"); if (btn != null) {passedTests[btn.innerHTML] = true;} else {var ftest = test.querySelector("button.test--failure span");  if(ftest != null){failedTests[ftest.innerHTML] = false;} } }); console.log(testSummary); testSummary = {'Passed': [], 'Failed': [], 'Flaked': []}; for(var ptk in passedTests) {if(failedTests[ptk] != undefined) {testSummary['Flaked'].push(ptk);}  testSummary['Passed'].push(ptk);} for(var ptk in failedTests) {if(passedTests[ptk] == null) {testSummary['Failed'].push(ptk);} } console.log(testSummary); return testSummary;}();var dog = function(){var csummary = function(display, bgColor, fgColor) {var sum = document.createElement('p'); sum.innerHTML=display; sum.style.backgroundColor=bgColor; sum.style.color=fgColor; document.body.insertBefore(sum, document.body.firstChild);}; setTimeout(function(){csummary("Flaked: " + testSummary['Flaked'].length, "#DDD", "#000");}, 100);setTimeout(function(){csummary("Failed: " + testSummary['Failed'].length, "#e45146", "#DDD");}, 100);setTimeout(function(){csummary("Passed: " + testSummary['Passed'].length, "#75b275", "#DDD");}, 100);}();}());
       }
